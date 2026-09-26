@@ -23,7 +23,8 @@
 ``Theme``                        主题对象（rcParams + 坐标轴背景色）
 ``TWO_D_THEME`` / ``SURFACE_THEME``
 ``resolve_theme(theme)``         把 str / dict / Theme / None 统一成 Theme
-``pick_chinese_fonts()``         挑选系统中真实存在的中文字体
+``pick_sans_fonts()``            挑选系统中真实存在的无衬线字体（中文 + 西文）
+``pick_chinese_fonts()``         兼容旧名字，等价于 ``pick_sans_fonts()``
 ``matplotlib_option()``          旧接口：二维全局样式（显式副作用）
 ``matplotlib_surface_option()``  旧接口：三维全局样式（显式副作用）
 """
@@ -37,33 +38,128 @@ import matplotlib.pyplot as plt
 from cycler import cycler
 
 # ----------------------------------------------------------------------
-# 中文字体
+# 字体
 # ----------------------------------------------------------------------
+#
+# 分三份候选表，最后按「中文字形 -> 西文字形 -> 兜底」的顺序拼成
+# ``font.sans-serif``：
+#
+#   CHINESE_FONT_CANDIDATES   中文字体（Windows / macOS / Linux 都覆盖）
+#   SANS_FONT_CANDIDATES      西文字体（拉丁字母、数字、数学符号）
+#   FALLBACK_FONTS            无论如何都追加的兜底字体
+#
+# 只有系统里**真实存在**的字体才会被选中（见 pick_sans_fonts），
+# 所以同一份代码在三个平台上都能自动挑到合适的字体，不用按平台分支。
 
 #: 候选中文字体，按优先级排列。
+#:
 #: 前面的字体缺失时会自动往后找，保证中文标题不会显示成方框。
+#: Windows / macOS / Linux 的常见中文字体都列进来了。
 CHINESE_FONT_CANDIDATES = [
+    # ---- Windows ----
     "Microsoft YaHei",
     "SimHei",
+    "SimSun",
+    "KaiTi",
+    "FangSong",
+    "Microsoft JhengHei",
+    # ---- macOS ----
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Heiti SC",
+    "STHeiti",
+    "Songti SC",
+    # ---- Linux ----
+    # Debian / Ubuntu 包名：
+    #   fonts-noto-cjk             -> Noto Sans CJK SC / TC
+    #   fonts-wqy-zenhei           -> WenQuanYi Zen Hei
+    #   fonts-wqy-microhei         -> WenQuanYi Micro Hei
+    #   fonts-arphic-uming         -> AR PL UMing CN
+    #   fonts-arphic-ukai          -> AR PL UKai CN
+    #   fonts-droid-fallback       -> Droid Sans Fallback
+    # Fedora / RHEL 包名：
+    #   google-noto-sans-cjk-fonts -> Noto Sans CJK SC
+    #   wqy-zenhei-fonts / wqy-microhei-fonts
+    #   adobe-source-han-sans-cn-fonts -> Source Han Sans CN
     "Noto Sans CJK SC",
-    "Noto Sans SC",
-    "WenQuanYi Zen Hei",
     "Noto Sans CJK TC",
+    "Noto Sans SC",
+    "Noto Sans TC",
+    "Source Han Sans SC",
+    "Source Han Sans CN",
+    # 只有衬线中文字体时也让它顶上来，总比显示方框好
+    "Noto Serif CJK SC",
+    "Source Han Serif SC",
+    "WenQuanYi Zen Hei",
+    "WenQuanYi Micro Hei",
+    "AR PL UMing CN",
+    "AR PL UKai CN",
+    "Droid Sans Fallback",
+    # ---- 通用 ----
     "Arial Unicode MS",
 ]
 
-#: 没有中文字体时的兜底字体。
+#: 候选西文字体，按优先级排列。
+#:
+#: 中文字体通常也带拉丁字形，但字重、字宽与数字的观感不一定协调；
+#: 纯英文环境下更可能一个中文字体都没有。所以单独准备这一份，
+#: 用来补齐拉丁字母、数字与数学符号。
+SANS_FONT_CANDIDATES = [
+    # ---- Windows ----
+    "Segoe UI",
+    "Calibri",
+    "Arial",
+    "Tahoma",
+    # ---- macOS ----
+    "Helvetica Neue",
+    "Helvetica",
+    "Avenir Next",
+    # ---- Linux ----
+    # Debian / Ubuntu 包名：
+    #   fonts-dejavu             -> DejaVu Sans（matplotlib 也自带）
+    #   fonts-liberation         -> Liberation Sans（Arial 的等宽替代）
+    #   fonts-noto-core          -> Noto Sans
+    #   fonts-ubuntu             -> Ubuntu
+    #   fonts-cantarell          -> Cantarell（GNOME 默认界面字体）
+    #   fonts-freefont-ttf       -> FreeSans
+    #   fonts-urw-base35         -> Nimbus Sans
+    # Fedora / RHEL 包名：
+    #   dejavu-sans-fonts / liberation-sans-fonts
+    #   google-noto-sans-fonts / ubuntu-family-fonts
+    "DejaVu Sans",
+    "Liberation Sans",
+    "Noto Sans",
+    "Ubuntu",
+    "Cantarell",
+    "FreeSans",
+    "Nimbus Sans",
+    "Arimo",
+    "Carlito",
+    # ---- 通用 ----
+    "Bitstream Vera Sans",
+]
+
+#: 无论如何都追加的兜底字体（matplotlib 自带 DejaVu Sans）。
 FALLBACK_FONTS = ["DejaVu Sans", "Arial"]
 
 _FONT_CACHE = []
 
 
-def pick_chinese_fonts(refresh=False):
-    """返回当前系统中真实存在的中文字体名称列表（按优先级排列）。
+def pick_sans_fonts(refresh=False):
+    """返回 ``font.sans-serif`` 该用的字体列表（按优先级排列）。
 
-    前面是已经安装的候选中文字体，后面补充 DejaVu Sans 等兜底字体；
-    如果系统中一个中文字体都没有，则返回完整的候选列表。
-    结果会缓存，``refresh=True`` 可强制重新扫描。
+    组合顺序：
+
+    1. 系统中**真实存在**的中文字体 —— 保证中文不出方框；
+    2. 系统中**真实存在**的西文字体 —— 补齐拉丁字形与数学符号；
+    3. :data:`FALLBACK_FONTS` —— 前两者都空时也有字体可用。
+
+    如果系统里一个中文字体都没有，就把完整的
+    :data:`CHINESE_FONT_CANDIDATES` 留在列表里：这样用户之后装上字体
+    **不需要改代码**，只是当前会缺字形（matplotlib 会给出 Glyph 警告）。
+
+    结果会缓存；新装了字体之后用 ``refresh=True`` 重新扫描，
+    或者直接重启 Python / Jupyter kernel。
     """
 
     if _FONT_CACHE and not refresh:
@@ -73,17 +169,34 @@ def pick_chinese_fonts(refresh=False):
 
     installed = {font.name for font in font_manager.fontManager.ttflist}
 
-    available = [name for name in CHINESE_FONT_CANDIDATES if name in installed]
+    chinese = [
+        name for name in CHINESE_FONT_CANDIDATES if name in installed
+    ]
 
-    fonts = (
-        available + FALLBACK_FONTS
-        if available
-        else CHINESE_FONT_CANDIDATES + FALLBACK_FONTS
-    )
+    if not chinese:
+        chinese = list(CHINESE_FONT_CANDIDATES)
+
+    latin = [name for name in SANS_FONT_CANDIDATES if name in installed]
+
+    fonts = []
+
+    for name in chinese + latin + FALLBACK_FONTS:
+        if name not in fonts:                 # 去重，保持先后顺序
+            fonts.append(name)
 
     _FONT_CACHE[:] = fonts
 
     return list(fonts)
+
+
+def pick_chinese_fonts(refresh=False):
+    """兼容旧名字：等价于 :func:`pick_sans_fonts`。
+
+    返回的是完整的 ``font.sans-serif`` 列表（中文字体在前、西文在后），
+    而不只是中文字体。
+    """
+
+    return pick_sans_fonts(refresh=refresh)
 
 
 # ----------------------------------------------------------------------
@@ -380,6 +493,7 @@ def apply_global_style(dimension):
 
 __all__ = [
     "CHINESE_FONT_CANDIDATES",
+    "SANS_FONT_CANDIDATES",
     "FALLBACK_FONTS",
     "BASE_RC",
     "TWO_D_RC",
@@ -391,6 +505,7 @@ __all__ = [
     "SURFACE_THEME",
     "DEFAULT_THEME",
     "THEME_ALIASES",
+    "pick_sans_fonts",
     "pick_chinese_fonts",
     "resolve_theme",
     "facecolor_for",

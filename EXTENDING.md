@@ -39,7 +39,7 @@
 ### 1.1 整个仓库
 
 ~~~text
-MultiPlotter_Package_0.2/
+MultiPlotter/
 ├── README.md                   # 快速开始：安装 / 最小 2D、3D、动画示例
 ├── API.md                      # 所有方法与参数的完整参考（第 0 ~ 27 章）
 ├── ANIMATION.md                # AnimationPlotter：更新模式、frame_data、保存
@@ -705,7 +705,7 @@ print(sorted(TWO_D_THEME.rc)[:5])
 | --- | --- |
 | `rc` | 通过 `matplotlib.rc_context()` 临时生效的 rcParams |
 | `facecolor` | 坐标轴面板颜色，**直接设在 Axes 上**（二维白、三维黑） |
-| `fonts` | 中文字体列表 |
+| `fonts` | 字体回退链（中文字体在前、西文在后） |
 
 ### 12.2 派生一个自定义主题
 
@@ -752,14 +752,46 @@ session = MultiPlotter.init(ncols=2, dpi=110)
 session.for_subplot(1, aspect="equal", legend=True)
 ~~~
 
-### 12.5 中文字体
+### 12.5 字体
+
+候选字体分三份表，最后拼成 `font.sans-serif` 回退链：
+
+| 常量 | 内容 |
+| --- | --- |
+| `CHINESE_FONT_CANDIDATES` | 中文字体（Windows / macOS / **Linux** 各平台，25 项） |
+| `SANS_FONT_CANDIDATES` | 西文字体（拉丁字母、数字、数学符号，17 项） |
+| `FALLBACK_FONTS` | 无条件追加的兜底字体 |
+
+顺序是**中文字体在前、西文字体在后**：matplotlib 会按顺序找第一个
+含有该字形的字体，中文放前面才能保证中文不出方框。
 
 ~~~python
-from multiplotter import pick_chinese_fonts
+from multiplotter import (
+    CHINESE_FONT_CANDIDATES, SANS_FONT_CANDIDATES, pick_sans_fonts,
+)
 
-print(pick_chinese_fonts())        # 当前系统真实存在的中文字体（带缓存）
-print(pick_chinese_fonts(refresh=True))   # 强制重新扫描
+print(pick_sans_fonts())                  # 当前系统选中的列表（带缓存）
+print(pick_sans_fonts(refresh=True))      # 新装字体后强制重新扫描
+print(CHINESE_FONT_CANDIDATES)            # 全部中文字体候选
+print(SANS_FONT_CANDIDATES)               # 全部西文字体候选
 ~~~
+
+`pick_chinese_fonts()` 是旧名字，与 `pick_sans_fonts()` 完全等价
+（返回的都是完整回退链，而不只是中文字体），保留是为了兼容旧代码。
+
+只有系统里**真实存在**的字体才会被选中，所以同一份代码在三个平台上都能
+自动挑到合适的字体。如果系统里一个中文字体都没有，候选表仍会留在列表里 ——
+这样用户之后装上字体**不用改代码**就能生效。
+
+想彻底换掉字体，覆盖主题即可：
+
+~~~python
+from multiplotter import MultiPlotter
+
+plotter = MultiPlotter(ncols=1, theme={"font.sans-serif": ["My Font"]})
+~~~
+
+Linux 各发行版的安装命令见 [README 的字体一节](README.md#字体)。
 
 ---
 
@@ -1106,7 +1138,9 @@ python tests/readme_check.py           # 文档图片路径 / 锚点 / 表格
 from multiplotter import (
     MultiPlotter, AnimationPlotter, PlotBuilder,
     Theme, TWO_D_THEME, SURFACE_THEME, resolve_theme,
-    pick_chinese_fonts, matplotlib_option, matplotlib_surface_option,
+    pick_sans_fonts, pick_chinese_fonts,
+    CHINESE_FONT_CANDIDATES, SANS_FONT_CANDIDATES,
+    matplotlib_option, matplotlib_surface_option,
     DRAW_REGISTRY, LAYER_SPECS, LayerSpec, KIND_DEFAULTS, INIT_KIND_ALIASES,
     PASSTHROUGH_KEYS, PASSTHROUGH_BY_KIND, SUPPORTED_2D_KINDS,
     SUPPORTED_3D_KINDS, SUPPORTED_KINDS, ADD_DISPATCH,
@@ -1520,8 +1554,8 @@ x.shape == (100,)   y.shape == (80,)   ->   z.shape == (80, 100)
 ### 19.18 中文是方框时先查字体
 
 主题会自动跳过系统里没有的中文字体。若全部候选都缺失，中文就会显示成方框，
-需要在操作系统层面装字体（见 [README 的中文字体一节](README.md#中文字体)），
-装完重启 Python / Jupyter kernel。
+需要在操作系统层面装字体（见 [README 的字体一节](README.md#字体)），
+装完重启 Python / Jupyter kernel（或调用 `pick_sans_fonts(refresh=True)`）。
 
 ### 19.19 注册是类级别的，但模块级导出会跟着一起变
 

@@ -33,7 +33,7 @@ python examples/05_science_composition.py           # ScienceResult + SciencePlo
 本包目录结构：
 
 ~~~text
-MultiPlotter_Package/
+MultiPlotter/
 ├── README.md                       # 快速开始
 ├── API.md                          # 所有方法与参数
 ├── ANIMATION.md                    # 动画
@@ -71,6 +71,7 @@ MultiPlotter_Package/
     ├── extension_test.py                 # 扩展开发测试
     ├── anim_api_test.py                  # AnimationPlotter 测试
     ├── compat_test.py                    # Matplotlib 版本兼容层测试
+    ├── font_test.py                      # 字体挑选（中文/西文、各平台）
     ├── defaults_test.py                  # 图层契约、预设可达性、默认值快照
     └── contract_test.py                  # 绘图契约回归（18 个场景）
 ~~~

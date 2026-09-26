@@ -382,29 +382,93 @@ pip install -e ".[dev]"
 matplotlib 3.5 以下不支持 `streamplot(broken_streamlines=...)` 等新参数，
 此时框架会自动忽略并给出提示；版本兼容策略集中在 `multiplotter/compat.py`。
 
-### 中文字体
+### 字体
 
-主题会自动选择系统中真实存在的中文字体，候选顺序为：
+主题会自动挑选系统中**真实存在**的字体，组成 `font.sans-serif` 回退链，
+依次覆盖 Windows / macOS / Linux。挑选顺序是：**中文字体在前，西文字体在后**，
+最后追加兜底字体（保证中文不出方框、英文与数学符号也有合适字形）。
+
+中文字体候选（按优先级，缺失的自动跳过）：
 
 ~~~text
-Microsoft YaHei
-SimHei
-Noto Sans CJK SC
-Noto Sans SC
-WenQuanYi Zen Hei
-Noto Sans CJK TC
+# Windows
+Microsoft YaHei      SimHei        SimSun        KaiTi
+FangSong             Microsoft JhengHei
+# macOS
+PingFang SC          Hiragino Sans GB            Heiti SC
+STHeiti              Songti SC
+# Linux
+Noto Sans CJK SC     Noto Sans CJK TC            Noto Sans SC
+Noto Sans TC         Source Han Sans SC          Source Han Sans CN
+Noto Serif CJK SC    Source Han Serif SC
+WenQuanYi Zen Hei    WenQuanYi Micro Hei
+AR PL UMing CN       AR PL UKai CN               Droid Sans Fallback
+# 通用
 Arial Unicode MS
 ~~~
 
-Windows 通常可用 Microsoft YaHei 或 SimHei。Ubuntu/WSL 若没有中文字体：
+西文字体候选（同样按优先级）：
 
-~~~bash
-sudo apt update
-sudo apt install fonts-noto-cjk
+~~~text
+# Windows
+Segoe UI             Calibri       Arial         Tahoma
+# macOS
+Helvetica Neue       Helvetica     Avenir Next
+# Linux
+DejaVu Sans          Liberation Sans             Noto Sans
+Ubuntu               Cantarell     FreeSans      Nimbus Sans
+Arimo                Carlito
+# 通用
+Bitstream Vera Sans
 ~~~
 
-安装后重启 Python / Jupyter kernel。中文字体不是 Python 包，
-需要在操作系统层面安装。
+两个列表和挑选函数都可以直接查看：
+
+~~~python
+from multiplotter import (
+    CHINESE_FONT_CANDIDATES, SANS_FONT_CANDIDATES, pick_sans_fonts,
+)
+
+print(pick_sans_fonts())        # 当前系统实际选中的列表（带缓存）
+print(pick_sans_fonts(refresh=True))   # 新装字体后强制重新扫描
+~~~
+
+#### Linux / WSL 安装字体
+
+中文字体不是 Python 包，要在操作系统层面安装。装完**重启 Python / Jupyter kernel**
+（或调用 `pick_sans_fonts(refresh=True)`）才会生效。
+
+~~~bash
+# Debian / Ubuntu / WSL
+sudo apt update
+sudo apt install fonts-noto-cjk          # Noto Sans CJK SC / TC（推荐）
+sudo apt install fonts-wqy-zenhei        # 文泉驿正黑
+sudo apt install fonts-wqy-microhei      # 文泉驿微米黑
+sudo apt install fonts-arphic-uming      # AR PL UMing CN（宋体风格）
+sudo apt install fonts-droid-fallback    # Droid Sans Fallback（兜底）
+
+# 西文字体
+sudo apt install fonts-dejavu fonts-liberation fonts-noto-core
+sudo apt install fonts-ubuntu fonts-cantarell fonts-freefont-ttf
+
+# Fedora / RHEL / CentOS
+sudo dnf install google-noto-sans-cjk-fonts wqy-zenhei-fonts wqy-microhei-fonts
+sudo dnf install adobe-source-han-sans-cn-fonts
+sudo dnf install dejavu-sans-fonts liberation-sans-fonts google-noto-sans-fonts
+
+# Arch
+sudo pacman -S noto-fonts-cjk wqy-zenhei ttf-dejavu ttf-liberation
+~~~
+
+验证是否装好：
+
+~~~bash
+fc-list :lang=zh | head        # 列出系统中文字体
+fc-list | grep -i "dejavu\|liberation"   # 列出西文字体
+~~~
+
+最小化容器镜像（如 `python:3.12-slim`）默认**没有**中文字体，
+中文会显示成方框；按上面的命令装 `fonts-noto-cjk` 即可。
 
 ### 重新生成示例图片与动图
 
@@ -420,6 +484,7 @@ python tests/field_table_test.py              # 矢量场与表格测试
 python tests/extension_test.py                # 扩展开发测试
 python tests/anim_api_test.py                 # AnimationPlotter 测试
 python tests/compat_test.py                   # Matplotlib 版本兼容层测试
+python tests/font_test.py                     # 字体挑选（中文/西文、各平台）
 python tests/defaults_test.py                 # 图层契约、预设可达性、默认值快照
 python tests/contract_test.py                 # 绘图契约回归（对比 contract_baseline.json）
 python tests/readme_check.py                  # 校验文档图片路径、锚点、编号、表格

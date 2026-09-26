@@ -127,7 +127,8 @@ plt.rcParams["animation.ffmpeg_path"] = r"D:\Program Files\ffmpeg\bin\ffmpeg.EXE
 
 ### 中文显示成方框
 
-见 [README.md 的「中文字体」一节](README.md#中文字体)。主题会自动跳过系统中不存在的字体。
+见 [README.md 的「字体」一节](README.md#字体)。主题会自动跳过系统中不存在的字体；
+Linux 上装 `fonts-noto-cjk` 即可（README 里有各发行版的命令）。
 
 ### `**kwargs` 里写的参数没生效
 

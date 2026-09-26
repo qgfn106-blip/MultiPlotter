@@ -77,6 +77,7 @@ from .saving import (
 )
 from .styles import (
     CHINESE_FONT_CANDIDATES,
+    SANS_FONT_CANDIDATES,
     SURFACE_THEME,
     THEME_ALIASES,
     TWO_D_THEME,
@@ -84,6 +85,7 @@ from .styles import (
     matplotlib_option,
     matplotlib_surface_option,
     pick_chinese_fonts,
+    pick_sans_fonts,
     resolve_theme,
 )
 
@@ -105,8 +107,10 @@ __all__ = [
     "SURFACE_THEME",
     "THEME_ALIASES",
     "resolve_theme",
+    "pick_sans_fonts",
     "pick_chinese_fonts",
     "CHINESE_FONT_CANDIDATES",
+    "SANS_FONT_CANDIDATES",
     "matplotlib_option",
     "matplotlib_surface_option",
     # 注册表与扩展

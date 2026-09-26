@@ -602,7 +602,7 @@ plotter.draw(show=False, theme="surface")
     "axes.prop_cycle": cycler(color=[...]),  # 默认配色
     "legend.fontsize": 10,
     "legend.framealpha": 0.95,
-    "font.sans-serif": [...],          # 中文字体候选列表
+    "font.sans-serif": [...],          # 中文字体在前、西文字体在后的回退链
     "axes.unicode_minus": False,       # 正常显示负号
 }
 ~~~
@@ -616,10 +616,13 @@ plotter.draw(show=False, theme="surface")
 
 ### 2.4 三点说明
 
-- **中文字体**：按顺序查找可用字体（Microsoft YaHei、SimHei、
-  Noto Sans CJK SC、Noto Sans SC、WenQuanYi Zen Hei、Noto Sans CJK TC、
-  Arial Unicode MS），自动跳过系统中没有安装的字体，因此中文标题不会变成方框。
-  这个列表由 `pick_chinese_fonts()` 计算并缓存。
+- **字体**：`font.sans-serif` 由三份候选表拼成 ——
+  `CHINESE_FONT_CANDIDATES`（25 项，覆盖 Windows / macOS / **Linux** 的中文字体）、
+  `SANS_FONT_CANDIDATES`（17 项西文字体）、`FALLBACK_FONTS`（兜底）。
+  顺序是**中文字体在前、西文字体在后**，系统里没装的会自动跳过，
+  因此中文标题不会变成方框，英文与数学符号也有合适字形。
+  这个列表由 `pick_sans_fonts()` 计算并缓存（旧名字 `pick_chinese_fonts()` 等价）。
+  各发行版的安装命令见 [README.md 的字体一节](README.md#字体)。
 - **二维与三维混排**：面板颜色在创建坐标轴时按维度直接设置，
   即使同一个画布上既有三维子图又有二维子图，二维子图也会保持浅色面板，
   不会被三维设置覆盖。
