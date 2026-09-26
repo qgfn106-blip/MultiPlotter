@@ -1,0 +1,32 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# ---- 虚拟环境 ----
+.venv/
+venv/
+env/
+
+# ---- 测试与示例的输出产物 ----
+# 这些目录是运行脚本时生成的，不进版本库。
+# 注意：tests/images/ 是文档引用的图片，必须进版本库，所以不在忽略之列。
+examples/output/
+example_output/
+tests/nohtml/
+tests/example_output/
+# 所有以 _out 结尾的目录都是脚本运行产物（含 anim_test_out/），一律不进版本库。
+*_out/
+audit_results/
+results/
+.pytest_cache/
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

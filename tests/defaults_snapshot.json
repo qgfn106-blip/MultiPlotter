@@ -1,0 +1,613 @@
+{
+  "bar": {
+    "add_method": "add_plot",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "align",
+      "bottom",
+      "edgecolor",
+      "error_kw",
+      "log",
+      "orientation",
+      "tick_label",
+      "width"
+    ],
+    "presets": {
+      "edgecolor": "black",
+      "linewidth": 0.6,
+      "show_values": true,
+      "value_format": ".2f",
+      "value_kwargs": {
+        "fontsize": 9
+      },
+      "value_offset": 3,
+      "view": {
+        "grid": true
+      },
+      "xlabel": "x",
+      "ylabel": "y"
+    }
+  },
+  "bar3d": {
+    "add_method": "add_bar3d",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 3,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "lightsource",
+      "shade"
+    ],
+    "presets": {
+      "alpha": 0.9,
+      "color": "steelblue",
+      "edgecolor": "black",
+      "linewidth": 0.5,
+      "max_value_labels": 12,
+      "show_values": true,
+      "value_format": ".2f",
+      "value_kwargs": {
+        "fontsize": 8
+      },
+      "value_offset": 0.03,
+      "value_selection": "auto",
+      "view": {
+        "azim": -58,
+        "box_aspect": [
+          1,
+          1,
+          0.85
+        ],
+        "elev": 26,
+        "grid": true
+      }
+    }
+  },
+  "contour": {
+    "add_method": "add_contour",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [],
+    "presets": {
+      "alpha": 0.75,
+      "clabel": true,
+      "clabel_kwargs": {
+        "fmt": "%.1f",
+        "fontsize": 8,
+        "inline": true
+      },
+      "cmap": "viridis",
+      "colorbar": true,
+      "colorbar_kwargs": {
+        "aspect": 20,
+        "shrink": 0.85
+      },
+      "filled": true,
+      "levels": 30,
+      "line_levels": 15,
+      "view": {
+        "aspect": "equal",
+        "grid": true
+      }
+    }
+  },
+  "correlation": {
+    "add_method": "add_correlation_heatmap",
+    "aliases": [
+      "corr",
+      "correlation_heatmap",
+      "correlation_matrix"
+    ],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": false,
+    "init_only": true,
+    "passthrough": [],
+    "presets": {
+      "cmap": "coolwarm",
+      "colorbar": true,
+      "show_values": true,
+      "text_size": 9,
+      "tick_rotation": 45,
+      "value_format": ".2f",
+      "view": {
+        "aspect": "equal",
+        "grid": false
+      }
+    }
+  },
+  "heatmap": {
+    "add_method": "add_plot",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "extent",
+      "interpolation",
+      "origin"
+    ],
+    "presets": {
+      "cmap": "viridis",
+      "colorbar": true,
+      "heatmap_text_size": 8,
+      "heatmap_value_format": ".2f",
+      "show_heatmap_values": true
+    }
+  },
+  "hist": {
+    "add_method": "add_plot",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "align",
+      "bins",
+      "cumulative",
+      "density",
+      "edgecolor",
+      "histtype",
+      "log",
+      "orientation",
+      "range",
+      "rwidth",
+      "stacked",
+      "weights"
+    ],
+    "presets": {
+      "bins": 30,
+      "edgecolor": "white",
+      "linewidth": 0.8,
+      "show_values": true,
+      "value_format": ".0f",
+      "value_kwargs": {
+        "fontsize": 7
+      },
+      "value_offset": 2,
+      "view": {
+        "grid": true
+      },
+      "xlabel": "x",
+      "ylabel": "count"
+    }
+  },
+  "hist3d": {
+    "add_method": "add_hist3d",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 3,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [],
+    "presets": {
+      "alpha": 0.9,
+      "bins": [
+        18,
+        18
+      ],
+      "cmap": "viridis",
+      "edgecolor": "black",
+      "linewidth": 0.2,
+      "max_value_labels": 12,
+      "show_values": true,
+      "value_format": ".0f",
+      "value_kwargs": {
+        "fontsize": 7
+      },
+      "value_offset": 0.04,
+      "value_selection": "auto",
+      "view": {
+        "azim": -60,
+        "box_aspect": [
+          1,
+          1,
+          0.7
+        ],
+        "elev": 30,
+        "grid": true
+      }
+    }
+  },
+  "image": {
+    "add_method": "add_plot",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "aspect",
+      "extent",
+      "filternorm",
+      "filterrad",
+      "interpolation",
+      "origin",
+      "resample"
+    ],
+    "presets": {
+      "cmap": "viridis",
+      "colorbar": true,
+      "interpolation": "nearest"
+    }
+  },
+  "line": {
+    "add_method": "add_plot",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "animated",
+      "dash_capstyle",
+      "dash_joinstyle",
+      "dashes",
+      "drawstyle",
+      "markevery",
+      "solid_capstyle",
+      "solid_joinstyle"
+    ],
+    "presets": {
+      "linewidth": 2.5,
+      "xlabel": "x",
+      "ylabel": "y"
+    }
+  },
+  "line3d": {
+    "add_method": "add_line3d",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 3,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "dashes",
+      "solid_capstyle"
+    ],
+    "presets": {
+      "highlight_zorder": 100,
+      "linewidth": 3.0,
+      "marker": "o",
+      "markersize": 4,
+      "view": {
+        "azim": -60,
+        "box_aspect": [
+          1,
+          1,
+          0.7
+        ],
+        "elev": 28,
+        "grid": true
+      }
+    }
+  },
+  "pie": {
+    "add_method": "add_pie",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "autopct",
+      "center",
+      "counterclock",
+      "explode",
+      "frame",
+      "normalize",
+      "radius",
+      "rotatelabels",
+      "startangle",
+      "textprops",
+      "wedgeprops"
+    ],
+    "presets": {
+      "show_values": true,
+      "startangle": 90,
+      "value_format": ".1f",
+      "value_kwargs": {
+        "fontsize": 9
+      },
+      "wedgeprops": {
+        "edgecolor": "white",
+        "linewidth": 1.0
+      }
+    }
+  },
+  "quiver": {
+    "add_method": "add_quiver",
+    "aliases": [
+      "vector"
+    ],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "angles",
+      "headaxislength",
+      "headlength",
+      "headwidth",
+      "minlength",
+      "minshaft",
+      "pivot",
+      "scale",
+      "scale_units",
+      "units",
+      "width"
+    ],
+    "presets": {
+      "cmap": "turbo",
+      "colorbar": true,
+      "colorbar_kwargs": {
+        "label": "|V|",
+        "shrink": 0.85
+      },
+      "view": {
+        "aspect": "equal",
+        "grid": true
+      },
+      "width": 0.004
+    }
+  },
+  "quiver3d": {
+    "add_method": "add_quiver3d",
+    "aliases": [
+      "vector3d"
+    ],
+    "animatable": true,
+    "dimension": 3,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "arrow_length_ratio",
+      "length",
+      "normalize",
+      "pivot"
+    ],
+    "presets": {
+      "cmap": "turbo",
+      "colorbar": true,
+      "colorbar_kwargs": {
+        "label": "|V|",
+        "shrink": 0.7
+      },
+      "density": 11,
+      "length": 0.5,
+      "view": {
+        "azim": -58,
+        "box_aspect": [
+          1,
+          1,
+          0.65
+        ],
+        "elev": 22,
+        "grid": true
+      }
+    }
+  },
+  "scatter": {
+    "add_method": "add_plot",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "c",
+      "edgecolors",
+      "linewidths",
+      "plotnonfinite",
+      "s"
+    ],
+    "presets": {
+      "alpha": 0.85,
+      "edgecolors": "none",
+      "s": 42,
+      "xlabel": "x",
+      "ylabel": "y"
+    }
+  },
+  "scatter3d": {
+    "add_method": "add_scatter3d",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 3,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "edgecolors",
+      "linewidths"
+    ],
+    "presets": {
+      "alpha": 0.85,
+      "depthshade": true,
+      "highlight_zorder": 101,
+      "s": 40,
+      "view": {
+        "azim": -60,
+        "box_aspect": [
+          1,
+          1,
+          0.7
+        ],
+        "elev": 28,
+        "grid": true
+      }
+    }
+  },
+  "stream3d": {
+    "add_method": "add_stream3d",
+    "aliases": [
+      "streamline3d"
+    ],
+    "animatable": true,
+    "dimension": 3,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "max_steps",
+      "seeds",
+      "step_size"
+    ],
+    "presets": {
+      "color": "#C62828",
+      "color_by_speed": false,
+      "line_width": 2.2,
+      "max_steps": 500,
+      "n_seeds": 9,
+      "seed_radius": 0.55,
+      "step_size": 0.05,
+      "view": {
+        "azim": -58,
+        "box_aspect": [
+          1,
+          1,
+          0.65
+        ],
+        "elev": 22,
+        "grid": true
+      }
+    }
+  },
+  "streamplot": {
+    "add_method": "add_streamplot",
+    "aliases": [
+      "flow",
+      "streamline"
+    ],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "arrowsize",
+      "arrowstyle",
+      "density",
+      "linewidth"
+    ],
+    "presets": {
+      "arrowsize": 1.2,
+      "cmap": "turbo",
+      "colorbar": true,
+      "colorbar_kwargs": {
+        "label": "|V|",
+        "shrink": 0.85
+      },
+      "density": 1.4,
+      "line_width": 1.3,
+      "view": {
+        "aspect": "equal",
+        "grid": true
+      }
+    }
+  },
+  "surface": {
+    "add_method": "add_surface",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 3,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "antialiased",
+      "ccount",
+      "cstride",
+      "facecolors",
+      "rcount",
+      "rstride",
+      "shade"
+    ],
+    "presets": {
+      "alpha": 0.92,
+      "cmap": "turbo",
+      "colorbar": true,
+      "colorbar_kwargs": {
+        "pad": 0.1,
+        "shrink": 0.7
+      },
+      "edgecolor": "none",
+      "light_enhance": {
+        "altdeg": 55,
+        "azdeg": 315,
+        "blend_mode": "soft",
+        "gamma": 0.65,
+        "vert_exag": 1.8
+      },
+      "view": {
+        "azim": -60,
+        "box_aspect": [
+          1,
+          1,
+          0.7
+        ],
+        "elev": 30,
+        "grid": true
+      }
+    }
+  },
+  "table": {
+    "add_method": "add_table",
+    "aliases": [],
+    "animatable": true,
+    "dimension": 2,
+    "has_draw_handler": true,
+    "init_only": false,
+    "passthrough": [
+      "cellLoc",
+      "colColours",
+      "colLabels",
+      "colWidths",
+      "edges",
+      "rowColours",
+      "rowHeight",
+      "rowLabels"
+    ],
+    "presets": {
+      "background_color": "#FFFFFF",
+      "bbox": [
+        0.02,
+        0.06,
+        0.96,
+        0.82
+      ],
+      "cell_align": "center",
+      "cell_fontsize": 11,
+      "cell_height": 0.115,
+      "edge_color": "#B0BEC5",
+      "edge_width": 0.9,
+      "header_background": "#1976D2",
+      "header_bold": true,
+      "header_text_color": "#FFFFFF",
+      "highlight_bold": true,
+      "highlight_color": "#FFE082",
+      "highlight_text_color": "#263238",
+      "row_label_background": "#ECEFF1",
+      "row_label_bold": true,
+      "row_label_text_color": "#263238",
+      "text_color": "#263238",
+      "view": {
+        "xlim": [
+          0.0,
+          1.0
+        ],
+        "ylim": [
+          0.0,
+          1.0
+        ]
+      },
+      "zebra_color": "#F5F7F9"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# MultiPlotter 运行依赖
+#
+# 这个文件只列**运行必需**的两个包，方便 `pip install -r requirements.txt`
+# 快速起步。完整声明（含可选依赖、版本范围与理由）见 pyproject.toml。
+#
+#     pip install -r requirements.txt          # 只装运行依赖
+#     pip install -e .                         # 从源码安装（推荐）
+#     pip install -e ".[gif,pandas]"           # 带上可选功能
+#     pip install -e ".[dev]"                  # 带上测试依赖
+
+# 数据容器与数值计算
+numpy>=1.21
+
+# 绘图后端
+# 版本下限见 multiplotter/compat.py 的 MATPLOTLIB_MIN；
+# 版本差异由 compat.py 在运行期自动处理，因此不需要写上限。
+matplotlib>=3.5
