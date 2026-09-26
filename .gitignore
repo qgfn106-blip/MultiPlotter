@@ -20,6 +20,7 @@ examples/output/
 example_output/
 tests/nohtml/
 tests/example_output/
+重构要求.txt
 # 所有以 _out 结尾的目录都是脚本运行产物（含 anim_test_out/），一律不进版本库。
 *_out/
 audit_results/
