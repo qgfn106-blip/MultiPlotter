@@ -1,6 +1,6 @@
 # MultiPlotter
 
-一个统一的**二维 / 三维科研绘图**包：写一次初始化设置，之后只给数据。
+一个统一的**二维 / 三维绘图**包：写一次初始化设置，之后只给数据。
 
 ~~~python
 from multiplotter import MultiPlotter
