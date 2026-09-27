@@ -461,9 +461,9 @@ KIND_DEFAULTS  <  init() 的全局样式  <  add() 的参数  <  add() 的 **kwa
 2. `PASSTHROUGH_KEYS`（所有图层通用）；
 3. `PASSTHROUGH_BY_KIND[kind]`（该 kind 专属）。
 
-被丢弃的键会记录下来，**打印一次警告**，并可以用
-`session.get_dropped_keys()` 查出来 —— 这样「全局样式里写了某个图层用不到的键」
-不会让绘图直接报 `TypeError`，但也不会被静默吞掉。
+被丢弃的键会记录下来，并发出一次标准 `UserWarning`；严格模式下会直接
+抛出 `TypeError`。这些键仍然可以用 `session.get_dropped_keys()` 查出来。
+默认模式保持旧的调用兼容性，但不会再通过 `print()` 输出难以捕获的提示。
 
 ---
 
@@ -1497,32 +1497,29 @@ import Multiplotter                        # ❌ 改这个模块的同名引用�
 
 框架参数（`view`、`legend`、`show_values`、`colorbar`、`light_enhance`…）
 不会被透传；其余键要在目标方法签名或 `PASSTHROUGH_KEYS` /
-`PASSTHROUGH_BY_KIND` 里。不在白名单里的键会被**丢弃并打印一次警告**，
-可用 `PlotBuilder.get_dropped_keys()` 查出。
+`PASSTHROUGH_BY_KIND` 里。不在白名单里的键会被**丢弃并发出一次标准警告**，
+严格模式下会直接抛出 `TypeError`；仍可用 `PlotBuilder.get_dropped_keys()`
+查出。
 
 > 反过来说：白名单里的键也不保证目标 artist 一定接受。
 > 例如 `cmap` 在通用白名单里（散点、热力图需要），
 > 但 `ax.plot()` 的 `Line2D` 不接受 `cmap`，会抛 `AttributeError`。
 > 所以「只给真正需要它的图层写这个参数」最稳妥。
 
-### 19.13 部分 `init()` 预设到不了目标方法（已知问题）
+### 19.13 `init()` 预设的可达性
 
-`KIND_DEFAULTS` 里有 8 个预设键因为不在方法签名、也不在白名单里，
-**实际不会生效**（重构前就是这样，`tests/defaults_test.py` 已登记）：
+内置 `KIND_DEFAULTS` 中的预设现在都必须能到达目标方法或绘制处理器。
+二维热力图/图像的 `colorbar`、`heatmap_text_size`，以及三维图层的
+`edgecolor`、`s`、`depthshade` 都有明确的参数或透传声明；默认值不会再
+因为漏写白名单而悄悄失效。
 
-| kind | 失效的预设键 | 实际表现 |
-| --- | --- | --- |
-| `heatmap` | `colorbar`、`heatmap_text_size` | 颜色条仍会出现（绘制函数有兜底），文字大小退回 9 而不是 8 |
-| `image` | `colorbar` | **不出现**颜色条（兜底是 `False`），文档里写的默认 `True` 未生效 |
-| `surface` | `edgecolor` | 用 matplotlib 默认描边 |
-| `bar3d` / `hist3d` | `edgecolor` | 同上 |
-| `scatter3d` | `s`、`depthshade` | 点的大小与深度着色用 matplotlib 默认值 |
+新增图层时，建议运行：
 
-想让某个键生效，注册时把它写进 `passthrough`，或直接在 `add_*` 里显式传：
-
-~~~python
-session.add("scatter3d", {"x": x, "y": y, "z": z}, s=40, depthshade=True)
+~~~bash
+python tests/defaults_test.py
 ~~~
+
+它会检查默认键是否仍然能够到达目标 `add_*` 方法。
 
 ### 19.14 `init()` 的全局样式只认显式传入的键
 

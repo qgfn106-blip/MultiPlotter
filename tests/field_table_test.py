@@ -9,7 +9,6 @@
 """
 
 import os
-import shutil
 import sys
 
 import matplotlib
@@ -25,10 +24,9 @@ sys.path.insert(
 )
 
 from Multiplotter import AnimationPlotter, MultiPlotter  # noqa: E402
+from _test_paths import output_dir  # noqa: E402
 
-OUT = "_field_table_out"
-shutil.rmtree(OUT, ignore_errors=True)
-os.makedirs(OUT, exist_ok=True)
+OUT = output_dir("field-table")
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False

@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import copy
 import math
+import operator
 import os
 import sys
 from typing import Mapping, Optional
@@ -420,6 +421,33 @@ class MultiPlotter(
 
         return self
 
+    def _validate_plot_configs(self):
+        """在创建 Figure 前统一校验已登记的图层配置。
+
+        ``add_*`` 仍然保持轻量登记语义；这里负责检查所有公共配置字段，
+        并把错误尽早绑定到具体图层，避免绘制到一半才失败。
+        """
+
+        for index, config in enumerate(self.plot_configs):
+            kind = config.get("kind", "<unknown>")
+            try:
+                self.validate_layer_config(kind, config)
+            except (TypeError, ValueError) as error:
+                raise type(error)(
+                    f"第 {index} 个图层（kind={kind!r}）配置无效：{error}"
+                ) from error
+
+            subplot = config["subplot"]
+            try:
+                normalized_subplot = operator.index(subplot)
+            except TypeError:
+                normalized_subplot = -1
+            if isinstance(subplot, bool) or normalized_subplot < 0:
+                raise ValueError(
+                    f"第 {index} 个图层（kind={kind!r}）的 subplot "
+                    f"必须是非负整数，当前为 {subplot!r}"
+                )
+
     # ================================================================
     # 维度查询
     # ================================================================
@@ -611,6 +639,8 @@ class MultiPlotter(
 
         if not self.plot_configs:
             raise ValueError("没有可绘制的配置")
+
+        self._validate_plot_configs()
 
         if style_scope not in self.STYLE_SCOPES:
             raise ValueError(
@@ -924,6 +954,7 @@ class MultiPlotter(
         ylim=None,
         zlim=None,
         theme=None,
+        strict=False,
         **style_overrides,
     ):
         """创建一个「预设好全部绘图参数」的绘图会话（Builder）。
@@ -944,6 +975,9 @@ class MultiPlotter(
             默认坐标轴范围，会写进 ``view``。
         theme
             主题（名称 / Theme 对象 / rcParams 字典）。
+        strict
+            是否让 ``init()`` 会话在发现未知或被过滤参数时直接抛出
+            ``TypeError``。默认 ``False``，保持旧行为但发出标准警告。
         **style_overrides
             其它全局样式，可用的键见 ``INIT_STYLE_DEFAULTS``，
             例如 ``legend``、``grid``、``cell_fontsize``、``cmap``、
@@ -982,6 +1016,7 @@ class MultiPlotter(
             zlabel=zlabel,
             limits=limits,
             theme=theme,
+            strict=strict,
         )
 
     # ================================================================

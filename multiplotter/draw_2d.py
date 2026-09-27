@@ -327,6 +327,9 @@ class TwoDLayersMixin:
         view: dict = None,
         show_heatmap_values=False,
         heatmap_value_format=".2f",
+        heatmap_text_size=None,
+        colorbar=None,
+        colorbar_kwargs=None,
         **kwargs,
     ):
         """添加普通二维图层。
@@ -347,6 +350,15 @@ class TwoDLayersMixin:
                 f"add_plot不支持图像类型：{kind}；"
                 f"请使用：{sorted(ADD_PLOT_KINDS)}"
             )
+
+        kwargs = dict(kwargs)
+        if kind in {"heatmap", "image"}:
+            if heatmap_text_size is not None:
+                kwargs["heatmap_text_size"] = heatmap_text_size
+            if colorbar is not None:
+                kwargs["colorbar"] = colorbar
+            if colorbar_kwargs is not None:
+                kwargs["colorbar_kwargs"] = colorbar_kwargs
 
         return self._register_layer(
             kind,

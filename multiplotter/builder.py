@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import copy
 import inspect
+import warnings
 
 import numpy as np
 
@@ -78,6 +79,7 @@ class PlotBuilder:
         limits=None,
         plotter_class=None,
         theme=None,
+        strict=False,
     ):
         from .core import MultiPlotter
 
@@ -109,6 +111,7 @@ class PlotBuilder:
 
         self.plotter_class = plotter_class
         self.theme = theme
+        self.strict = bool(strict)
 
         plotter_kwargs = {
             "ncols": ncols,
@@ -124,7 +127,7 @@ class PlotBuilder:
         # 记录每次 add() 的结果，便于复查
         self.records = []
 
-        # 已经提醒过的「被丢弃的键」，避免重复打印
+        # 已经提醒过的「被丢弃的键」，避免同一会话重复提示
         self._warned_keys = {}
 
     # ================================================================
@@ -412,20 +415,23 @@ class PlotBuilder:
         )
 
         # 被丢掉的键通常意味着写错了名字，或者把某个图层的专用参数
-        # 当成了全局样式。这里给出一次提醒，便于定位。
+        # 当成了全局样式。默认保持兼容，只发一次标准警告；严格模式
+        # 直接失败，避免生成“看起来成功但参数没有生效”的图。
         if dropped:
+            if self.strict:
+                raise TypeError(
+                    f"kind={kind} 不支持参数：{dropped}。"
+                    "如果确实需要透传，请使用 mpl_kwargs 或注册透传键。"
+                )
             warned = self._warned_keys.setdefault(resolved, set())
             fresh = [key for key in dropped if key not in warned]
-
             if fresh:
                 warned.update(fresh)
-                print(
-                    f"[PlotBuilder] kind={kind} 忽略了这些不适用于它的参数："
-                    f"{fresh}。\n"
-                    "  原因：它们既不在该方法签名里，"
-                    "也不在 PASSTHROUGH_KEYS / PASSTHROUGH_BY_KIND 白名单里。\n"
-                    "  如果确实需要透传，请把键名加进白名单。"
+                message = (
+                    f"kind={kind} 忽略了不适用的参数：{fresh}。"
+                    "如果确实需要透传，请使用 mpl_kwargs 或注册透传键。"
                 )
+                warnings.warn(message, UserWarning, stacklevel=2)
 
         self.records.append({
             "kind": kind,

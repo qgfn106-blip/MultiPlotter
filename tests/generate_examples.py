@@ -6,7 +6,8 @@
     python generate_examples.py
 
 只需要 numpy 和 matplotlib。脚本会覆盖 ``images/`` 中同名的 png，
-并在 ``example_output/`` 下生成一个用于验证 ``draw(save_path=...)`` 的文件。
+并在系统临时目录 ``multiplotter-tests/generated-examples/`` 下生成一个
+用于验证 ``draw(save_path=...)`` 的文件。
 """
 
 import os
@@ -27,6 +28,7 @@ IMAGES_DIR = os.path.join(TESTS_DIR, "images")
 sys.path.insert(0, BASE_DIR)
 
 from Multiplotter import MultiPlotter  # noqa: E402
+from _test_paths import output_dir  # noqa: E402
 
 os.makedirs(IMAGES_DIR, exist_ok=True)
 
@@ -752,8 +754,7 @@ def example_full_output():
 
 def example_save_path():
     """验证 draw(save_path=...) 保存结果，并生成 README 引用的示例图片。"""
-    save_dir = os.path.join(BASE_DIR, "example_output")
-    os.makedirs(save_dir, exist_ok=True)
+    save_dir = output_dir("generated-examples")
     target = os.path.join(save_dir, "demo_save_path.png")
 
     # 同名文件会被自动加序号，为了生成固定名字的 README 图片，

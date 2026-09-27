@@ -54,7 +54,7 @@ MultiPlotter/
 └── tests/
     ├── images/                     # 文档引用的全部图片与动图
     ├── nohtml/                     # strip_html_docs.py 生成的无 HTML 副本
-    ├── example_output/             # 生成脚本的附加输出
+    ├── %TEMP%/multiplotter-tests/  # 测试与生成脚本的附加输出
     ├── generate_examples.py              # 生成静态示例图片
     ├── generate_animation_examples.py    # 生成动画示例动图
     ├── generate_compare_examples.py      # 生成开篇对比章节的图与动图

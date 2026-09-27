@@ -40,6 +40,7 @@
     "has_draw_handler": true,
     "init_only": false,
     "passthrough": [
+      "edgecolor",
       "lightsource",
       "shade"
     ],
@@ -189,7 +190,9 @@
     "dimension": 3,
     "has_draw_handler": true,
     "init_only": false,
-    "passthrough": [],
+    "passthrough": [
+      "edgecolor"
+    ],
     "presets": {
       "alpha": 0.9,
       "bins": [
@@ -427,8 +430,10 @@
     "has_draw_handler": true,
     "init_only": false,
     "passthrough": [
+      "depthshade",
       "edgecolors",
-      "linewidths"
+      "linewidths",
+      "s"
     ],
     "presets": {
       "alpha": 0.85,
@@ -524,6 +529,7 @@
       "antialiased",
       "ccount",
       "cstride",
+      "edgecolor",
       "facecolors",
       "rcount",
       "rstride",

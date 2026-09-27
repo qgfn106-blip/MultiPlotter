@@ -264,6 +264,16 @@ plotter.add("bar", {"x": labels, "y": values})
 fig, axes = plotter.draw(show=False)
 ~~~
 
+默认模式会对不适用的全局样式键发出标准 `UserWarning`。
+如果希望把这类问题直接视为错误，可以启用严格模式：
+
+~~~python
+plotter = MultiPlotter.init(ncols=2, strict=True)
+~~~
+
+确实需要传给 Matplotlib、但不在透传白名单中的参数，请使用
+`mpl_kwargs={...}`。
+
 优先级（从低到高）：
 
 ~~~text
@@ -380,7 +390,9 @@ pip install -e ".[dev]"
 ~~~
 
 matplotlib 3.5 以下不支持 `streamplot(broken_streamlines=...)` 等新参数，
-此时框架会自动忽略并给出提示；版本兼容策略集中在 `multiplotter/compat.py`。
+此时框架会自动忽略并发出标准警告；版本兼容策略集中在
+`multiplotter/compat.py`。需要将参数问题直接变成异常时使用
+`MultiPlotter.init(strict=True)`。
 
 ### 字体
 

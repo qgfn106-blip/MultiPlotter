@@ -378,11 +378,12 @@ PASSTHROUGH_BY_KIND = {
     "heatmap": {"interpolation", "origin", "extent"},
     "surface": {
         "rstride", "cstride", "rcount", "ccount", "shade",
-        "facecolors", "antialiased",
+        "facecolors", "antialiased", "edgecolor",
     },
     "line3d": {"solid_capstyle", "dashes"},
-    "scatter3d": {"edgecolors", "linewidths"},
-    "bar3d": {"shade", "lightsource"},
+    "scatter3d": {"s", "depthshade", "edgecolors", "linewidths"},
+    "bar3d": {"shade", "lightsource", "edgecolor"},
+    "hist3d": {"edgecolor"},
     "quiver": {
         "width", "headwidth", "headlength", "headaxislength",
         "minshaft", "minlength", "units", "angles", "scale_units",

@@ -18,10 +18,9 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
 from Multiplotter import AnimationPlotter, MultiPlotter  # noqa: E402
+from _test_paths import output_dir  # noqa: E402
 
-OUT = "_audit_out"
-shutil.rmtree(OUT, ignore_errors=True)
-os.makedirs(OUT, exist_ok=True)
+OUT = output_dir("smoke")
 
 plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
@@ -432,12 +431,11 @@ def t_anim_save_true():
     p.add_plot(kind="line", x=x, y=np.sin(x), subplot=0,
                view={"xlim": (0, 6.3), "ylim": (-1.6, 1.6)})
     p.draw(show=False)
-    shutil.rmtree("audit_results", ignore_errors=True)
+    audit_dir = output_dir("audit-results")
     p.animate(frames=4, update_func=lambda ax, f: ax.plot(x, np.sin(x - f)),
-              save=True, save_path_name="audit_results", fps=4, dpi=60)
-    assert os.path.isfile(os.path.join("audit_results",
+              save=True, save_path_name=audit_dir, fps=4, dpi=60)
+    assert os.path.isfile(os.path.join(audit_dir,
                                        "MultiPlotter_animation.gif"))
-    shutil.rmtree("audit_results", ignore_errors=True)
     plt.close("all")
 
 

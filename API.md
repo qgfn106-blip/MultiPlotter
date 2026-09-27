@@ -36,6 +36,10 @@
 >
 > 详见 [EXTENDING.md 14.4](EXTENDING.md#144-完全透传用-mpl_kwargs-字典)。
 
+> **严格模式**：`MultiPlotter.init(strict=True)` 会把 Builder 发现的未知或
+> 不适用参数直接变成 `TypeError`。默认 `strict=False`，保持旧的调用兼容性，
+> 但会通过标准 `UserWarning` 提示这些键没有生效。
+
 ## 目录
 
 - [0. 开篇：与普通 matplotlib 的完整对比](#0-开篇与普通-matplotlib-的完整对比)
@@ -2841,10 +2845,14 @@ plotter.add_plot(
     xlabel="x", ylabel="y",
     color="#1976D2", linewidth=2.0, label="sin(x)", legend=True,
 )
-plotter.draw(show=False, save_path="example_output/demo_save_path.png")
+plotter.draw(
+    show=False,
+    save_path="%TEMP%/multiplotter-tests/generated-examples/demo_save_path.png",
+)
 ~~~
 
-运行后会在 `example_output/` 下生成：
+运行后会在系统临时目录的
+`multiplotter-tests/generated-examples/` 下生成：
 
 ![draw(save_path=...) 保存结果](tests/images/25_save_path_example.png)
 

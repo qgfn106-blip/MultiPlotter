@@ -12,14 +12,11 @@
 ② ``PASSTHROUGH_KEYS``（通用 artist 样式）；
 ③ ``PASSTHROUGH_BY_KIND[kind]``（该 kind 专属）。
 
-如果某个预设键三类都不属于，它就会被**静默丢弃** —— 预设写了等于没写。
-本测试把这种情况固定下来：既保证框架自己的预设不会大面积失效，
-也让新增 kind 时能立刻发现「预设键漏登记」。
+如果某个预设键三类都不属于，它就会被过滤，预设写了等于没写。
+本测试要求内置预设全部可达，避免默认样式在运行时悄悄失效；
+新增 kind 时也能立刻发现「预设键漏登记」。
 
-``KNOWN_UNREACHABLE`` 是**重构前就已存在**的清单（与重构前的注册表
-逐字节一致），不是重构引入的问题。修复它们会改变实际渲染结果
-（例如 ``scatter3d`` 的点会从 matplotlib 默认尺寸变成预设的 ``s=40``），
-因此这里只做登记与守护，不在重构中改变绘图行为。
+``KNOWN_UNREACHABLE`` 保留为空字典，仅作为兼容旧测试代码的名字。
 """
 
 import inspect
@@ -31,26 +28,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from multiplotter import INIT_ONLY_KINDS, MultiPlotter  # noqa: E402
 
-#: 已知「声明了但到不了目标方法」的预设键。
-#:
-#: 键是 kind，值是该 kind 里失效的预设键集合。
-#: 这些都是重构前就存在的：``KIND_DEFAULTS`` 与白名单和重构前完全一致。
-KNOWN_UNREACHABLE = {
-    # ``draw_heatmap`` 用 ``kwargs.pop("colorbar", True)`` 兜底，
-    # 所以颜色条照常出现；``heatmap_text_size`` 则退回默认值 9（文档写的是 8）。
-    "heatmap": {"colorbar", "heatmap_text_size"},
-    # ``draw_image`` 的兜底是 ``colorbar=False``，所以文档里写的
-    # 「image 默认 colorbar=True」实际没有生效。
-    "image": {"colorbar"},
-    # ``add_surface`` / ``add_bar3d`` / ``add_hist3d`` 的签名里没有 edgecolor，
-    # 也没有登记进白名单，于是退回家用 matplotlib 的默认描边。
-    "surface": {"edgecolor"},
-    "bar3d": {"edgecolor"},
-    "hist3d": {"edgecolor"},
-    # ``add_scatter3d`` 的签名里没有 s / depthshade，点的大小与
-    # 深度着色都退回 matplotlib 默认值。
-    "scatter3d": {"s", "depthshade"},
-}
+# 所有内置预设都应当能到达目标方法或对应的绘制处理器。
+KNOWN_UNREACHABLE = {}
 
 
 def reachable_keys(kind, method_name, defaults):

@@ -17,7 +17,7 @@
 
     python extend_example.py
 
-会生成 example_output/ 下的几张图。
+会生成系统临时目录 ``multiplotter-tests/extended-example/`` 下的几张图。
 """
 
 import os
@@ -37,6 +37,7 @@ import numpy as np  # noqa: E402
 from matplotlib.colors import LightSource, Normalize  # noqa: E402
 
 from Multiplotter import AnimationPlotter, MultiPlotter  # noqa: E402
+from _test_paths import output_dir  # noqa: E402
 
 
 class ExtendedPlotter(AnimationPlotter):
@@ -380,10 +381,7 @@ class ExtendedPlotter(AnimationPlotter):
 # ======================================================================
 
 def main():
-    out_dir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "example_output"
-    )
-    os.makedirs(out_dir, exist_ok=True)
+    out_dir = output_dir("extended-example")
 
     x = np.linspace(0, 10, 24)
     y = np.sin(x)

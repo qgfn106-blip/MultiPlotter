@@ -132,10 +132,10 @@ Linux 上装 `fonts-noto-cjk` 即可（README 里有各发行版的命令）。
 
 ### `**kwargs` 里写的参数没生效
 
-先看控制台有没有这样一行提示：
+先看是否出现这样的标准警告：
 
 ~~~text
-[PlotBuilder] kind=line 忽略了这些不适用于它的参数：['cell_fontsize']。
+kind=line 忽略了不适用的参数：['cell_fontsize']。
 ~~~
 
 这说明该键既不在目标方法的签名里，也不在透传白名单里，已经被丢弃。
@@ -147,7 +147,19 @@ Linux 上装 `fonts-noto-cjk` 即可（README 里有各发行版的命令）。
    而 `color`、`linewidth`、`alpha`、`cmap`、`zorder` 会。
 2. **确认目标方法真的支持它**。例如 `heatmap_text_size` 是框架参数，
    而 `interpolation` 是 `Axes.imshow()` 的参数。
-3. **确实需要透传就登记白名单**：
+3. **确实需要透传就登记白名单，或者使用 `mpl_kwargs`**：
+
+   ~~~python
+   session.add("line", {"x": x, "y": y}, mpl_kwargs={"picker": 5})
+   ~~~
+
+   需要让这类错误直接失败时：
+
+   ~~~python
+   session = MultiPlotter.init(ncols=1, strict=True)
+   ~~~
+
+   登记白名单的写法仍然是：
 
    ~~~python
    from multiplotter import MultiPlotter

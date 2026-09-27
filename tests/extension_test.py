@@ -15,7 +15,6 @@
 """
 
 import os
-import shutil
 import sys
 
 import matplotlib
@@ -37,10 +36,9 @@ from Multiplotter import (  # noqa: E402
     matplotlib_option,
     matplotlib_surface_option,
 )
+from _test_paths import output_dir  # noqa: E402
 
-OUT = "_extension_out"
-shutil.rmtree(OUT, ignore_errors=True)
-os.makedirs(OUT, exist_ok=True)
+OUT = output_dir("extension")
 
 passed = 0
 failed = 0
