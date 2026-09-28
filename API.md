@@ -480,7 +480,7 @@ from Multiplotter import MultiPlotter, AnimationPlotter, PlotBuilder
 from multiplotter import MultiPlotter, AnimationPlotter, PlotBuilder
 ~~~
 
-包根目录的 `Multiplotter.py` 现在只是一个转发模块，没有自己的实现。
+包根目录的 `multiplotter.py` 现在只是一个转发模块，没有自己的实现。
 
 > **要扩展类方法（新增自己的图层、修改默认样式）？**
 > 请看 **[EXTENDING.md](EXTENDING.md)**：包结构、图层契约、
