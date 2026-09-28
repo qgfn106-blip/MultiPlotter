@@ -484,6 +484,14 @@ fc-list | grep -i "dejavu\|liberation"   # 列出西文字体
 
 ### 重新生成示例图片与动图
 
+运行测试脚本前安装开发依赖：
+
+~~~bash
+pip install -e ".[dev]"
+~~~
+
+随后运行需要的脚本：
+
 ~~~bash
 python tests/generate_examples.py             # 静态示例图片
 python tests/generate_animation_examples.py   # 动画示例动图
@@ -495,6 +503,7 @@ python tests/init_test.py                     # init() / PlotBuilder 测试
 python tests/field_table_test.py              # 矢量场与表格测试
 python tests/extension_test.py                # 扩展开发测试
 python tests/anim_api_test.py                 # AnimationPlotter 测试
+python tests/strict_mode_test.py              # 严格模式与参数路由测试
 python tests/compat_test.py                   # Matplotlib 版本兼容层测试
 python tests/font_test.py                     # 字体挑选（中文/西文、各平台）
 python tests/defaults_test.py                 # 图层契约、预设可达性、默认值快照

@@ -431,6 +431,41 @@ def apply_theme_to_axes(ax, dimension=2, theme=None):
     return ax
 
 
+def bind_theme_to_figure(fig, theme):
+    """Keep later canvas renders themed without changing process-wide rcParams."""
+
+    resolved = resolve_theme(theme)
+    canvas = fig.canvas
+    previous = getattr(canvas, "_multiplotter_theme", None)
+    if previous is resolved:
+        return fig
+
+    original_draw = getattr(canvas, "_multiplotter_original_draw", canvas.draw)
+    original_print = getattr(
+        canvas, "_multiplotter_original_print_figure", canvas.print_figure
+    )
+    canvas._multiplotter_original_draw = original_draw
+    canvas._multiplotter_original_print_figure = original_print
+    canvas._multiplotter_theme = resolved
+
+    def draw(*args, **kwargs):
+        with resolved.rc_context():
+            return original_draw(*args, **kwargs)
+
+    def print_figure(*args, **kwargs):
+        rc = {
+            key: value
+            for key, value in resolved.rc.items()
+            if not key.startswith("savefig.")
+        }
+        with plt.rc_context(rc):
+            return original_print(*args, **kwargs)
+
+    canvas.draw = draw
+    canvas.print_figure = print_figure
+    return fig
+
+
 # ----------------------------------------------------------------------
 # 旧接口：显式修改全局 rcParams
 # ----------------------------------------------------------------------
@@ -510,6 +545,7 @@ __all__ = [
     "resolve_theme",
     "facecolor_for",
     "apply_theme_to_axes",
+    "bind_theme_to_figure",
     "matplotlib_option",
     "matplotlib_surface_option",
     "GLOBAL_STYLE_FUNCTIONS",

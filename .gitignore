@@ -16,8 +16,16 @@ env/
 # 这些目录是运行脚本时生成的，不进版本库。
 # 注意：tests/images/ 是文档引用的图片，必须进版本库，所以不在忽略之列。
 tests.ipynb/
+test.ipynb
 tests/output/
+tests/example_output/
+tests/nohtml/
 examples/output/
+example_output/
+*_out/
+audit_results/
+results/
+分析结果/
 重构要求.txt
 .pytest_cache/
 
