@@ -327,9 +327,6 @@ class TwoDLayersMixin:
         view: dict = None,
         show_heatmap_values=False,
         heatmap_value_format=".2f",
-        heatmap_text_size=None,
-        colorbar=None,
-        colorbar_kwargs=None,
         **kwargs,
     ):
         """添加普通二维图层。
@@ -350,15 +347,10 @@ class TwoDLayersMixin:
                 f"add_plot不支持图像类型：{kind}；"
                 f"请使用：{sorted(ADD_PLOT_KINDS)}"
             )
-
-        kwargs = dict(kwargs)
-        if kind in {"heatmap", "image"}:
-            if heatmap_text_size is not None:
-                kwargs["heatmap_text_size"] = heatmap_text_size
-            if colorbar is not None:
-                kwargs["colorbar"] = colorbar
-            if colorbar_kwargs is not None:
-                kwargs["colorbar_kwargs"] = colorbar_kwargs
+        if kind == "image" and "heatmap_text_size" in kwargs:
+            raise TypeError(
+                "heatmap_text_size 仅适用于 heatmap，不适用于 image"
+            )
 
         return self._register_layer(
             kind,
@@ -405,6 +397,7 @@ class TwoDLayersMixin:
         explode=None,
         autopct=None,
         startangle=90,
+        view=None,
         **kwargs,
     ):
         """添加二维饼图。
@@ -455,6 +448,7 @@ class TwoDLayersMixin:
             label=label,
             legend=legend,
             legend_kwargs=legend_kwargs,
+            view=view,
             show_values=show_values,
             value_format=value_format,
             value_kwargs=value_kwargs,

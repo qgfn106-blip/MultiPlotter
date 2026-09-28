@@ -133,7 +133,10 @@
     "has_draw_handler": true,
     "init_only": false,
     "passthrough": [
+      "colorbar",
+      "colorbar_kwargs",
       "extent",
+      "heatmap_text_size",
       "interpolation",
       "origin"
     ],
@@ -231,6 +234,8 @@
     "init_only": false,
     "passthrough": [
       "aspect",
+      "colorbar",
+      "colorbar_kwargs",
       "extent",
       "filternorm",
       "filterrad",

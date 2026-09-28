@@ -138,7 +138,6 @@ p.animate(
 check("无扩展名自动补 .gif", os.path.isfile(os.path.join(OUT, "no_ext.gif")))
 plt.close("all")
 
-shutil.rmtree("分析结果", ignore_errors=True)
 p = AnimationPlotter(ncols=1, figsize_per_plot=(5, 3), dpi=60)
 p.add_plot(kind="line", x=x, y=np.sin(x), subplot=0,
            view={"xlim": (0, 6.3), "ylim": (-1.5, 1.5)})
@@ -147,12 +146,14 @@ p.animate(
     frames=6,
     update_func=lambda ax, f: ax.plot(x, np.sin(x - f / 2)),
     save=True,
+    save_path_name=os.path.join(OUT, "save-true"),
 )
 check(
-    "save=True 保存到 分析结果/",
-    os.path.isfile(os.path.join("分析结果", "MultiPlotter_animation.gif")),
+    "save=True 保存到指定目录",
+    os.path.isfile(os.path.join(
+        OUT, "save-true", "MultiPlotter_animation.gif"
+    )),
 )
-shutil.rmtree("分析结果", ignore_errors=True)
 plt.close("all")
 
 # ======================================================================

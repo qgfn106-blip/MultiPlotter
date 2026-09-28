@@ -82,6 +82,7 @@ from .styles import (
     THEME_ALIASES,
     TWO_D_THEME,
     Theme,
+    bind_theme_to_figure,
     matplotlib_option,
     matplotlib_surface_option,
     pick_chinese_fonts,
@@ -103,6 +104,7 @@ __all__ = [
     "convective_heat_transfer",
     # 主题
     "Theme",
+    "bind_theme_to_figure",
     "TWO_D_THEME",
     "SURFACE_THEME",
     "THEME_ALIASES",

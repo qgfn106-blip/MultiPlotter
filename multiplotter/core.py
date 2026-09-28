@@ -53,6 +53,7 @@ from .saving import get_unique_filename, resolve_save_path, save_figure
 from .styles import (
     apply_global_style,
     apply_theme_to_axes,
+    bind_theme_to_figure,
     facecolor_for,
     matplotlib_option,
     matplotlib_surface_option,
@@ -168,6 +169,12 @@ class MultiPlotter(
 
         # draw() 得到的 Figure，供 close() 使用
         self._figure = None
+
+    @property
+    def theme_name(self):
+        """当前实例主题的名称。"""
+
+        return resolve_theme(self.theme).name
 
     # ================================================================
     # 图层注册表扩展接口
@@ -763,16 +770,17 @@ class MultiPlotter(
                 default_name="MultiPlotter",
             )
 
-        if show:
-            plt.show()
-
         axes_array = np.asarray(axes, dtype=object)
 
         self._figure = fig
+        bind_theme_to_figure(fig, resolved_theme)
         self._subplot_axes = {
             int(index): ax
             for index, ax in enumerate(axes_array.ravel())
         }
+
+        if show:
+            plt.show()
 
         return fig, axes_array
 

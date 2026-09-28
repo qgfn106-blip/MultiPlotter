@@ -54,7 +54,6 @@ MultiPlotter/
 └── tests/
     ├── images/                     # 文档引用的全部图片与动图
     ├── nohtml/                     # strip_html_docs.py 生成的无 HTML 副本
-    ├── %TEMP%/multiplotter-tests/  # 测试与生成脚本的附加输出
     ├── generate_examples.py              # 生成静态示例图片
     ├── generate_animation_examples.py    # 生成动画示例动图
     ├── generate_compare_examples.py      # 生成开篇对比章节的图与动图
@@ -70,11 +69,16 @@ MultiPlotter/
     ├── init_test.py                      # init() / PlotBuilder 的测试
     ├── extension_test.py                 # 扩展开发测试
     ├── anim_api_test.py                  # AnimationPlotter 测试
+    ├── strict_mode_test.py               # 严格模式与参数路由测试
     ├── compat_test.py                    # Matplotlib 版本兼容层测试
     ├── font_test.py                      # 字体挑选（中文/西文、各平台）
     ├── defaults_test.py                  # 图层契约、预设可达性、默认值快照
     └── contract_test.py                  # 绘图契约回归（18 个场景）
 ~~~
+
+测试和示例脚本的临时输出默认保存在系统临时目录
+`multiplotter-tests/` 中，不会写入仓库；可用
+`MULTIPLOTTER_TEST_OUTPUT` 环境变量指定其它位置。
 
 `tests/images/` 下的图片：
 

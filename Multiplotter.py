@@ -10,16 +10,9 @@
 以及 ``import Multiplotter as module`` 后替换 ``module.matplotlib_option``），
 这里把包里的公开名字原样再导出一次。
 
-注意：``extension_test.py`` 里那种
-
-    import Multiplotter as module
-    module.matplotlib_option = patched
-
-的写法在重构后**仍然有效**，因为 ``MultiPlotter.draw()`` 内部是通过
-``multiplotter.core`` 里导入的名字调用 option 函数的；本模块的
-``matplotlib_option`` 只是同一个函数对象的另一个引用。
-如果你需要 monkeypatch 生效于全局样式路径，请打补丁到
-``multiplotter.core.matplotlib_option``（见 EXTENDING.md）。
+重新赋值本模块的 ``matplotlib_option`` 不会替换内部全局样式路径。
+该路径会动态查找 ``multiplotter.styles`` 中的函数；如需替换，请打补丁到
+``multiplotter.styles.matplotlib_option``（见 EXTENDING.md）。
 """
 
 from multiplotter import *          # noqa: F401,F403

@@ -16,7 +16,6 @@
 本测试要求内置预设全部可达，避免默认样式在运行时悄悄失效；
 新增 kind 时也能立刻发现「预设键漏登记」。
 
-``KNOWN_UNREACHABLE`` 保留为空字典，仅作为兼容旧测试代码的名字。
 """
 
 import inspect
@@ -27,10 +26,6 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from multiplotter import INIT_ONLY_KINDS, MultiPlotter  # noqa: E402
-
-# 所有内置预设都应当能到达目标方法或对应的绘制处理器。
-KNOWN_UNREACHABLE = {}
-
 
 def reachable_keys(kind, method_name, defaults):
     """返回 ``defaults`` 里能真正到达目标方法的键。"""
@@ -69,23 +64,11 @@ def test_defaults_are_reachable():
         unreachable = set(defaults) - reachable_keys(
             kind, method_name, defaults
         )
-        expected = set(KNOWN_UNREACHABLE.get(kind, ()))
-
-        extra = unreachable - expected
-
-        if extra:
+        if unreachable:
             failures.append(
-                f"{kind}: 预设键 {sorted(extra)} 到不了 {method_name}()，"
+                f"{kind}: 预设键 {sorted(unreachable)} 到不了 {method_name}()，"
                 "请把它们加进 PASSTHROUGH_BY_KIND（注册时用 passthrough=）"
                 "或写进方法签名"
-            )
-
-        fixed = expected - unreachable
-
-        if fixed:
-            failures.append(
-                f"{kind}: {sorted(fixed)} 已经能生效了，"
-                "请从 KNOWN_UNREACHABLE 里删掉"
             )
 
     assert not failures, "预设可达性检查失败：\n  " + "\n  ".join(failures)
@@ -410,12 +393,6 @@ def main():
         return 1
 
     print(f"全部通过（{len(tests)}/{len(tests)}）")
-
-    known = sum(len(value) for value in KNOWN_UNREACHABLE.values())
-    print(
-        f"提示：已知有 {known} 个预设键在重构前就无法生效，"
-        "详见本文件顶部的 KNOWN_UNREACHABLE 说明。"
-    )
 
     return 0
 

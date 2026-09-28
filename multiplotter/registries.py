@@ -373,9 +373,12 @@ PASSTHROUGH_BY_KIND = {
     },
     "image": {
         "interpolation", "origin", "extent", "filternorm",
-        "filterrad", "resample", "aspect",
+        "filterrad", "resample", "aspect", "colorbar", "colorbar_kwargs",
     },
-    "heatmap": {"interpolation", "origin", "extent"},
+    "heatmap": {
+        "interpolation", "origin", "extent", "colorbar",
+        "colorbar_kwargs", "heatmap_text_size",
+    },
     "surface": {
         "rstride", "cstride", "rcount", "ccount", "shade",
         "facecolors", "antialiased", "edgecolor",
