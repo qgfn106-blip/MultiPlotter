@@ -482,12 +482,21 @@ fc-list | grep -i "dejavu\|liberation"   # 列出西文字体
 最小化容器镜像（如 `python:3.12-slim`）默认**没有**中文字体，
 中文会显示成方框；按上面的命令装 `fonts-noto-cjk` 即可。
 
-### 重新生成示例图片与动图
 
-运行测试脚本前安装开发依赖：
 
-~~~bash
-pip install -e ".[dev]"
+
+##若外部文件引用依然无法正常显示中文字体可以写入如下代码：
+
+
+~~~python
+import matplotlib.pyplot as plt
+from multiplotter import MultiPlotter, pick_sans_fonts
+
+fonts = pick_sans_fonts(refresh=True)
+
+plt.rcParams["font.sans-serif"] = fonts
+plt.rcParams["axes.unicode_minus"] = False
+
 ~~~
 
 随后运行需要的脚本：
